@@ -10,26 +10,27 @@
 	}
 
 	$id = $_GET['id'];
-	//Primero consulta al niño
+	# Primero consulta al niño y su docente asignado
 	$sql = mysqli_query($conexion,"							
 		SELECT 
-		t1.`id`,
-		t1.`nivel_educ`,
-		t2.`nombre`,
-		t2.`apellido`,
-		t2.`sexo`,
-		t2.`fecha_nac`,
-		t2.`lugar_nac`,
+		t1.`id`, t1.`nivel_educ`,
+		t2.`nombre`,t2.`apellido`,t2.`sexo`,t2.`fecha_nac`,t2.`lugar_nac`,
 		t3.`descripcion` AS direccion,
 		t4.`descripcion` AS parroquia, 
 		t5.`condicion_id`,
-		t6.`descripcion` AS condicion
+		t6.`descripcion` AS condicion,
+		t7.`docente_id`,
+		t8.`persona_id`,
+		t9.`nombre` AS DocenteNom, t9.`apellido`AS DocenteApe
 		FROM `ninos` t1 
 		INNER JOIN `personas` t2 ON t1.`persona_id` = t2.`id`
 		INNER JOIN `direcciones` t3 ON t2.`id` = t3.`persona_id` 
 		INNER JOIN `parroquias` t4 ON t4.`id` = t3.`parroquia_id`
 		INNER JOIN `nino_condicion` t5 ON t1.`id` = t5.`nino_id`
 		INNER JOIN `condiciones` t6 ON t6.`id` = t5.`condicion_id` 
+		INNER JOIN `nino_docente` t7 ON t1.`id` = t7.`nino_id`
+		INNER JOIN `personal` t8 ON t7.`docente_id` = t8.`id`
+		INNER JOIN `personas` t9 ON t8.`persona_id` = t9.`id`
 		WHERE t1.`id` = $id
 	");
 
@@ -49,10 +50,13 @@
 			$parroquia     = $data['parroquia'];
 			$fecha         = $data['fecha_nac'];
 			$direccion     = $data['direccion'];
-			$nivel         = $data['nivel_educ'];
+			$nivel         = $data['nivel_educ'];	
+			
+			$DocenteNom     = $data['DocenteNom'];
+			$DocenteApe     = $data['DocenteApe'];
 		}
 	}
-	//Consulta al representante
+	# Consulta al representante
 	$sql = mysqli_query($conexion,"							
 		SELECT 
 		t1.`id`, 
@@ -166,6 +170,7 @@
 					<label for="nivel">Nivel educativo</label>
 					<?php echo $nivel; ?>
 					<label for="condicion">Docente Asignado</label>
+					<?php echo $DocenteNom." ".$DocenteApe; ?>
 				</div>
 				<div class="submit">
 				</div>
