@@ -1,0 +1,43 @@
+/*estilos de las consultas*/
+
+#container1{
+	width: 100%;
+	padding: 30px 50px;
+	margin: auto;
+	background: #efefef;
+}
+
+#container1 h1{
+	font-size: 35px;
+	display: inline-block;
+}
+
+table{
+	border-collapse: collapse;
+	font-size: 12px;
+	width: 100%;
+}
+
+table th{
+	text-align: center;
+	padding: 5px;
+	background: #3d7ba8;
+	color: #fff;
+}
+
+table tr:nth-child(odd){
+	background: #fff;
+}
+
+table td{
+	padding: 1px;
+	text-align: center;
+}
+
+.link_edit{
+	color: #0ca4ce;
+}
+
+.link_delete{
+	color: #f26b6b;
+}

@@ -1,0 +1,38 @@
+*{
+	padding:0px;
+	margin:0px;
+}
+
+img.imgbanner{
+	margin: 5px auto;
+}
+
+
+.item{
+	height: 400px;
+}
+
+.imgcar{
+	width: 100%;
+}
+
+
+.btn-primary{
+	background: red;
+}
+
+.entrar:hover{
+	background:#0F2D51;
+}
+
+
+
+.usern{
+	padding:10px;
+	background:#01A67C;
+	margin-top: 4px;
+	width: 100%;
+	color: #fff;
+	text-align: center;
+}
+
