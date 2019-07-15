@@ -1,5 +1,5 @@
 <?php 
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -23,7 +23,7 @@
 	INNER JOIN `personas` t2 ON t2.`id` = t1.`persona_id` 
 	INNER JOIN `direcciones` t3 ON t2.`id` = t3.`persona_id` 
 	INNER JOIN `parroquias` t4 ON t4.`id` = t3.`parroquia_id`
-	INNER JOIN `parentesco` t5 ON t5.`id` = t1.`parentesco_id` 
+	INNER JOIN `eav` t5 ON t5.`id` = t1.`parentesco_id` 
 	WHERE t1.`id` = '$id'
 	");
 
@@ -59,7 +59,7 @@
 		}else{
 			extract($_POST);
 
-			print_r($_POST);
+			// print_r($_POST);
 
 			$ejec=mysqli_query($conexion,"UPDATE `representantes` SET `parentesco_id` = '$parentescoNew', `profesion` = '$profesionNew', `telefono` = '$telefonoNew' WHERE `representantes`.`id` = '$id'");
 
@@ -118,13 +118,7 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<section class="container section">
 			<div class="form_registro">
 			<form class="form" action="" method="post">
@@ -140,10 +134,9 @@
 					<label for="parentesco">Parentesco</label>
 					<select name="parentescoNew">
 						<option value="<?php echo $parentesco_id;?>"><?php echo $parentesco;?>*</option>
-						<option value="Padre">Padre</option>
-						<option value="Madre">Madre</option>
-						<option value="Representante Legal">Representante Legal</option>
-						<OPTION>Otro</OPTION>
+						<option value="43">Madre</option>
+						<option value="44">Padre</option>
+						<option value="45">Otro</option>
 					</select>
 				</div>
 				<div class="form_representante">

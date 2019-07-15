@@ -1,5 +1,5 @@
 <?php 
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -37,7 +37,7 @@
 				
 				$data = mysqli_fetch_array($query);
 				$persona_id = $data['id'];
-				$fecha_ingreso = strval(date('Y-m-d'));
+				//$fecha_ingreso = strval(date('Y-m-d'));
 				
 				$query_insert = mysqli_query($conexion,"
 					INSERT INTO `direcciones`( `descripcion`, `parroquia_id`, `persona_id`) 
@@ -105,13 +105,7 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<section class="container section">
 			<div class="form_registro">
 				<h1>Registrar Usuarios</h1>
@@ -162,7 +156,7 @@
 						<select name="cargos">
 							<option value="">Seleccionar</option>
 							<?php
-							  $ejc=mysqli_query($conexion,"SELECT * FROM cargos ORDER BY descripcion ASC");
+							  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=3 ORDER BY `eav`.`id` ASC");
 							  while ($filaP=mysqli_fetch_assoc($ejc)) {
 							?>
 							  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion'];?></option>
@@ -176,7 +170,7 @@
 						<select name="rol">
 							<option value="">Seleccionar</option>
 							<?php
-							  $ejc=mysqli_query($conexion,"SELECT * FROM roles ORDER BY descripcion ASC");
+							  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id= 47 ORDER BY `eav`.`id` ASC");
 							  while ($filaP=mysqli_fetch_assoc($ejc)) {
 							?>
 							  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion'];?></option>
@@ -193,9 +187,11 @@
 					<div class="col-md-4">	
 						<label for="estatus">Estatus</label>
 						<select name="estatus">
-							<option value="1">Activo</option>
-							<option value="2">Inactivo</option>
+							<option value="39">Activo</option>
+							<option value="40">Inactivo</option>
 						</select>
+						<label for="fecha_ingreso">Fecha de Ingreso</label>
+						<input type="date" name="fecha_ingreso">
 						<br><br><br>
 					</div>	
 					<input class="btn-save" type="submit" value="REGISTRAR">

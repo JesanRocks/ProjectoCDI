@@ -1,5 +1,5 @@
 <?php 
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -48,13 +48,7 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<div class="row">
 			<div class="col-md-12">
 				<section class="container" id="container1">
@@ -77,28 +71,28 @@
 							<?php 
 
 								$query = mysqli_query($conexion,"
-SELECT 
-t1.`id`,t1.`telefono`, t1.`profesion`, t1.`cargo_id`, 
-t2.`nombre`, t2.`apellido`, t2.`cedula`, t2.`fecha_nac`,
-t3.`descripcion` AS direccion,
-t4.`descripcion` AS parroquia,
-t6.`descripcion` AS cargo
-FROM `personal` t1 
-INNER JOIN `personas` t2 ON t1.`persona_id` = t2.`id` 
-INNER JOIN `direcciones` t3 ON t3.`persona_id` = t2.`id`
-INNER JOIN `parroquias` t4 ON t3.`parroquia_id` = t4.`id`
-INNER JOIN `cargos` t6 ON t1.`cargo_id` = t6.`id`
-WHERE t1.`cargo_id`= 3
-
+									SELECT 
+									t1.`id`,t1.`telefono`, t1.`profesion`, t1.`cargo_id`, 
+									t2.`nombre`, t2.`apellido`, t2.`cedula`, t2.`fecha_nac`,
+									t3.`descripcion` AS direccion,
+									t4.`descripcion` AS parroquia,
+									t6.`descripcion` AS cargo
+									FROM `personal` t1 
+									INNER JOIN `personas` t2 ON t1.`persona_id` = t2.`id` 
+									INNER JOIN `direcciones` t3 ON t3.`persona_id` = t2.`id`
+									INNER JOIN `parroquias` t4 ON t3.`parroquia_id` = t4.`id`
+									INNER JOIN `eav` t6 ON t1.`cargo_id` = t6.`id`
+									WHERE t1.`cargo_id`= 6
 								");
 
 								$result = mysqli_num_rows($query);
 
 								if ($result > 0) {
+									$i=1;
 									while ($data = mysqli_fetch_array($query)) {
 							?>		
 								<tr>
-									<td><?php echo $data['id'] ?></td>
+									<td><?php echo $i ?></td>
 									<td><?php echo $data['nombre'] ?></td>
 									<td><?php echo $data['apellido'] ?></td>
 									<td><?php echo $data['cedula'] ?></td>
@@ -112,6 +106,7 @@ WHERE t1.`cargo_id`= 3
 								</tr>
 							
 							<?php
+								$i++;
 									}
 								}
 

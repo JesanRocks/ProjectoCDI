@@ -12,7 +12,7 @@
 					<div class="collapse navbar-collapse" id="nav">
 						<ul class="nav navbar-nav">
 							<li class=""><a href="usuario.php"><span class="fa fa-home"></span> Inicio</a></li>
-							<li class=""><a href="R_datos_representante.php"><span class="fa fa-home"></span> Inscripciones</a></li>
+							<li class=""><a href="validar_inscripcion.php"><span class="fa fa-home"></span> Inscripciones</a></li>
 
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="fa fa-address-book"></span> Consultas <i class="caret"></i></a>
@@ -22,7 +22,7 @@
 						<li><a href="C_ninos.php">Consultar Niños</a></li>
 					</ul>
 				</li>
-				<li class=""><a href="reportes.php"><span class="fa fa-home"></span> Reporte</a></li>
+				<li class=""><a href="documentos/reporte.php"><span class="fa fa-home"></span> Reporte</a></li>
 			</ul>
 			<div class="navbar-right">
 				<ul class="nav navbar-nav"> 

@@ -1,18 +1,10 @@
 <?php
-	
 	$alert = '';
 	session_start();
-	if (isset($_SESSION['active'])) {
-		if ($_SESSION['rol'] == "Administrador") {
-		
-			header("location: admin.php");
-
-		}
-		elseif ($_SESSION['rol'] == "Usuario")
-		{
-			header("location: usuario.php");
-		}
-	}else{
+	
+	if (isset($_SESSION['active'])) {							
+		header("location: sistema.php");
+	}
 
 	if (!empty($_POST)) {
 		
@@ -22,12 +14,13 @@
 
 		}else{
 
-			require_once "conectar.php";
+			require_once 'include/db/conectar.php';
+			
 			$cedula = mysqli_real_escape_string($conexion,$_POST['cedula']);
 			$clave = mysqli_real_escape_string($conexion,$_POST['clave']);
 
 			$query = mysqli_query($conexion,"SELECT * FROM `usuarios` WHERE `cedula`='$cedula' AND `clave`='$clave' ");
-			//mysqli_close($conexion);
+
 			$result = mysqli_num_rows($query);
 
 			if ($result > 0 ){
@@ -49,26 +42,20 @@
 				$_SESSION['rol']    = $data['rol_id'];
 				$_SESSION['clave']  = $data['clave'];
 
-				
-				if ($_SESSION['rol'] == '1') {
-							
-						header("location: admin.php");
-					}else{
-						header("location: usuario.php");
+				if (isset($_SESSION['active'])) {							
+					header("location: sistema.php");
 				}
 
 			}else{
 				$alert = '<p class="msg_error">Usuario Incorrecto</p>';
-				session_destroy();
+				//session_destroy();
 			}
+
 		}
 
 	}
 
-}
-
-
- ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

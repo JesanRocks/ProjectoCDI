@@ -1,5 +1,5 @@
 <?php
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -38,7 +38,7 @@
 				$data = mysqli_fetch_array($query);
 				$persona_id = $data['id'];
 				$representante_id = $_SESSION['representante'];
-				$fecha_ingreso = strval(date('Y-m-d'));
+				//$fecha_ingreso = strval(date('Y-m-d'));
 
 				$insert = mysqli_query($conexion,"
 					INSERT INTO `direcciones`(`descripcion`, `parroquia_id`, `persona_id`) 
@@ -54,10 +54,10 @@
 				$data = mysqli_fetch_array($query);
 				$nino_id = $data['id'];
 
-				$insert = mysqli_query($conexion,"INSERT INTO `nino_condicion`(`nino_id`, `docente_id`) 
-                      VALUES ('$nino_id','$condicion')");
+				$insert = mysqli_query($conexion,"INSERT INTO nino_docente (nino_id, docente_id) 
+                      VALUES ('$nino_id','$docente')");
 
-				$insert = mysqli_query($conexion,"INSERT INTO `nino_condicion`(`nino_id`, `$docente`) 
+        		$insert = mysqli_query($conexion,"INSERT INTO nino_condicion (nino_id, condicion_id) 
                       VALUES ('$nino_id','$condicion')");
 
 				if ($insert) {
@@ -112,13 +112,7 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<section class="section">
 			<form class="form" action="" method="post">
 				<h1>Datos del Niño</h1>
@@ -146,7 +140,7 @@
 						  	SELECT t1.`id`, t2.`nombre`, t2.`apellido` 
 						  	FROM personal t1 
 						  	INNER JOIN `personas` t2 ON t1.`persona_id` =t2.`id` 
-						  	WHERE t1.`cargo_id` = 3 
+						  	WHERE t1.`cargo_id` = 6 
 						  	ORDER BY t1.`id` ASC
 						  	");
 						  while ($filaP=mysqli_fetch_assoc($ejc)) {
@@ -166,7 +160,7 @@
 					<select name="condicion" id="condicion">
 						<option value="">Seleccionar</option>
 						<?php
-						  $ejc=mysqli_query($conexion,"SELECT * FROM condiciones ORDER BY descripcion ASC");
+						  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=9 ORDER BY `eav`.`descripcion` ASC");
 						  while ($filaP=mysqli_fetch_assoc($ejc)) {
 						?>
 						  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion']; ?></option>
@@ -190,9 +184,11 @@
 					<input type="text" name="direccion" placeholder="Dirección">
 					<label for="estatus">Estatus</label>
 					<select name="estatus">
-						<option value="1">Activo</option>
-						<option value="2">Inactivo</option>
+						<option value="39">Activo</option>
+						<option value="40">Inactivo</option>
 					</select>
+					<label for="fecha_ingreso">Fecha de Ingreso</label>
+					<input type="date" name="fecha_ingreso">
 				</div>
 				<div class="submit">
 					<input class="btn_save" type="submit" value="REGISTRAR">

@@ -1,5 +1,5 @@
 <?php 
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -12,29 +12,29 @@
 	$id = $_GET['id'];
 
 	$sql = mysqli_query($conexion,"
-SELECT 
-t1.`id`, t1.`clave`, t1.`rol_id`, 
-t2.`id` AS persona_id,t2.`nombre`, t2.`apellido`, t2.`cedula`,
-t3.`descripcion` AS direccion,
-t4.`descripcion` AS parroquia,
-t5.`telefono`, t5.`profesion`, t5.`cargo_id`,t5.`estatus_id`,
-t6.`descripcion` AS cargo,
-t7.`descripcion` AS rol,
-t8.`descripcion` AS estatus
-FROM `usuarios` t1 
-INNER JOIN `personas` t2 ON t1.`persona_id` = t2.`id` 
-INNER JOIN `direcciones` t3 ON t3.`persona_id` = t2.`id`
-INNER JOIN `parroquias` t4 ON t3.`parroquia_id` = t4.`id`
-INNER JOIN `personal` t5 ON t5.`persona_id` = t2.`id`
-INNER JOIN `cargos` t6 ON t5.`cargo_id` = t6.`id`
-INNER JOIN `roles` t7 ON t1.`rol_id` = t7.`id`
-INNER JOIN `estatus` t8 ON t5.`estatus_id` = t8.`id`
-WHERE t1.`id`= $id ");
+	SELECT 
+	t1.`clave`, t1.`rol_id`, 
+	t2.`id` AS persona_id,t2.`nombre`, t2.`apellido`, t2.`cedula`,
+	t3.`descripcion` AS direccion,
+	t4.`descripcion` AS parroquia,
+	t5.`id`, t5.`telefono`, t5.`profesion`, t5.`cargo_id`,t5.`estatus_id`,t5.`fecha_ingreso`,
+	t6.`descripcion` AS cargo,
+	t7.`descripcion` AS rol,
+	t8.`descripcion` AS estatus
+	FROM `usuarios` t1 
+	INNER JOIN `personas` t2 ON t1.`persona_id` = t2.`id` 
+	INNER JOIN `direcciones` t3 ON t3.`persona_id` = t2.`id`
+	INNER JOIN `parroquias` t4 ON t3.`parroquia_id` = t4.`id`
+	INNER JOIN `personal` t5 ON t5.`persona_id` = t2.`id`
+	INNER JOIN `eav` t6 ON t5.`cargo_id` = t6.`id`
+	INNER JOIN `eav` t7 ON t1.`rol_id` = t7.`id`
+	INNER JOIN `eav` t8 ON t5.`estatus_id` = t8.`id`
+	WHERE t5.`id`= $id ");
 
 	$result = mysqli_num_rows($sql);
 
 	if ($result == 0) {
-		header("Location: C_usuarios.php");
+		//header("Location: C_usuarios.php");
 
 	}else{
 		while ($data = mysqli_fetch_array($sql)) {
@@ -49,8 +49,9 @@ WHERE t1.`id`= $id ");
 			$profesion  = $data['profesion'];
 			$cargo_id   = $data['cargo_id'];
 			$cargo      = $data['cargo'];
+			$fecha_ingreso = $data['fecha_ingreso'];
 			$rol_id     = $data['rol_id'];
-			$rol        = $data['rol'];
+			$rol_personal = $data['rol'];
 			$estatus_id = $data['estatus_id'];
 			$estatus    = $data['estatus'];
 			$clave      = $data['clave'];
@@ -65,7 +66,7 @@ WHERE t1.`id`= $id ");
 		}else{
 			extract($_POST);
 
-			$ejec=mysqli_query($conexion,"UPDATE `personal` SET `telefono`='$telefonoNew',`profesion`='$profesionNew',`cargo_id`='$cargoNew',`estatus_id`='$estatusNew' WHERE `id` = '$id'");
+			$ejec=mysqli_query($conexion,"UPDATE `personal` SET `telefono`='$telefonoNew',`profesion`='$profesionNew',`cargo_id`='$cargoNew',`fecha_ingreso`='$fecha_ingresoNew',`estatus_id`='$estatusNew' WHERE `id` = '$id'");
 
 			$ejec=mysqli_query($conexion,"UPDATE `personas` SET `nombre`='$nombreNew',`apellido`='$apellidoNew',`cedula`='$cedulaNew' WHERE `personas`.`id`= '$persona_id'");
 
@@ -124,13 +125,7 @@ WHERE t1.`id`= $id ");
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<section class="container section">
 			<div class="form_registro">
 				<h1>Actualizar Usuarios</h1>
@@ -181,7 +176,7 @@ WHERE t1.`id`= $id ");
 						<select  name="cargoNew">
 							<option value="<?php echo $cargo_id; ?>"><?php echo $cargo; ?>*</option>
 							<?php
-							  $ejc=mysqli_query($conexion,"SELECT * FROM cargos ORDER BY descripcion ASC");
+							  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=3 ORDER BY `eav`.`id` ASC");
 							  while ($filaP=mysqli_fetch_assoc($ejc)) {
 							?>
 							  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion'];?></option>
@@ -193,9 +188,9 @@ WHERE t1.`id`= $id ");
 					<div class="col-md-4">				
 						<label for="rol">Tipo de Usuario</label>
 						<select name="rolNew">
-							<option value="<?php echo $rol_id; ?>"><?php echo $rol;?>*</option>
+							<option value="<?php echo $rol_id; ?>"><?php echo $rol_personal;?>*</option>
 							<?php
-							  $ejc=mysqli_query($conexion,"SELECT * FROM roles ORDER BY descripcion ASC");
+							  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id= 47 ORDER BY `eav`.`id` ASC");
 							  while ($filaP=mysqli_fetch_assoc($ejc)) {
 							?>
 							  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion'];?></option>
@@ -213,9 +208,11 @@ WHERE t1.`id`= $id ");
 						<label for="estatus">Estatus</label>
 						<select name="estatusNew">
 							<option value="<?php echo $estatus_id; ?>"><?php echo $estatus;?>*</option>
-							<option value="1">Activo</option>
-							<option value="2">Inactivo</option>
+							<option value="39">Activo</option>
+							<option value="40">Inactivo</option>
 						</select>
+						<label for="fecha_ingreso">Fecha de Ingreso</label>
+						<input type="date" name="fecha_ingresoNew" value="<?php echo $fecha_ingreso; ?>">
 						<br><br><br>
 					</div>	
 					<input class="btn-save" type="submit" value="ACTUALIZAR">

@@ -1,5 +1,5 @@
 <?php 
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {	
 		header("location: index.php");
@@ -48,13 +48,7 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<div class="row">
 			<div class="col-md-12">
 				<section class="container" id="container1">

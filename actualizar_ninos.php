@@ -1,5 +1,5 @@
 <?php
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -15,6 +15,7 @@
 		SELECT 
 		t1.`id`,
 		t1.`nivel_educ`,
+		t1.`fecha_ingreso`,
 		t1.`estatus_id`,
 		t2.`id` AS persona_id,
 		t2.`nombre`,
@@ -38,11 +39,11 @@
 		INNER JOIN `direcciones` 	t3 ON t2.`id` = t3.`persona_id` 
 		INNER JOIN `parroquias` 	t4 ON t4.`id` = t3.`parroquia_id`
 		INNER JOIN `nino_condicion` t5 ON t1.`id` = t5.`nino_id`
-		INNER JOIN `condiciones` 	t6 ON t6.`id` = t5.`condicion_id`
+		INNER JOIN `eav` 	t6 ON t6.`id` = t5.`condicion_id`
 		INNER JOIN `nino_docente` 	t7 ON t7.`id` = t5.`nino_id`
 		INNER JOIN `personal`		t8 ON t8.`id` = t7.`docente_id`
 		INNER JOIN `personas` 		t9 ON t8.`persona_id` = t9.`id` 
-		INNER JOIN `estatus` 		t10 ON t10.`id` = t1.`estatus_id` 
+		INNER JOIN `eav` 		t10 ON t10.`id` = t1.`estatus_id` 
 		WHERE t1.`id` = $id
 	");
 
@@ -65,6 +66,7 @@
 			$parroquia     = $data['parroquia'];
 			$parroquia_id  = $data['parroquia_id'];
 			$fecha         = $data['fecha_nac'];
+			$fecha_ingreso = $data['fecha_ingreso'];
 			$direccion     = $data['direccion'];
 			$nivel         = $data['nivel_educ'];
 			$docente_id    = $data['docente_id'];
@@ -83,7 +85,7 @@
 		}else{
 			extract($_POST);
 
-			$ejec=mysqli_query($conexion,"UPDATE `ninos` SET `nivel_educ`='$nivelNew', `estatus_id`='$estatusNew' WHERE `id`='$id'");
+			$ejec=mysqli_query($conexion,"UPDATE `ninos` SET `nivel_educ`='$nivelNew', `estatus_id`='$estatusNew',`fecha_ingreso`='$fecha_ingresoNew' WHERE `id`='$id'");
 
 			$ejec=mysqli_query($conexion,"UPDATE `nino_condicion` SET `condicion_id`='$condicionNew' WHERE `nino_id`='$id'");
 
@@ -144,13 +146,7 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<section class="container section">
 			<div class="form_registro">
 			<form class="form" action="" method="post">
@@ -179,7 +175,7 @@
 						  	SELECT t1.`id`, t2.`nombre`, t2.`apellido` 
 						  	FROM personal t1 
 						  	INNER JOIN `personas` t2 ON t1.`persona_id` =t2.`id` 
-						  	WHERE t1.`cargo_id` = 3 
+						  	WHERE t1.`cargo_id` = 6 
 						  	ORDER BY t1.`id` ASC
 						  	");
 						  while ($filaP=mysqli_fetch_assoc($ejc)) {
@@ -199,7 +195,7 @@
 					<select name="condicionNew" id="condicion">
 						<option value="<?php echo $condicion_id?>"><?php echo $condicion;?>*</option>
 						<?php
-						  $ejc=mysqli_query($conexion,"SELECT * FROM condiciones ORDER BY descripcion ASC");
+						  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=9 ORDER BY `eav`.`descripcion` ASC");
 						  while ($filaP=mysqli_fetch_assoc($ejc)) {
 						?>
 						  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion']; ?></option>
@@ -224,12 +220,14 @@
 					<label for="estatus">Estatus</label>
 					<select name="estatusNew">
 						<option value="<?php echo $estatus_id; ?>"><?php echo $estatus; ?>*</option>
-						<option value="1">Activo</option>
-						<option value="2">Inactivo</option>
+						<option value="39">Activo</option>
+						<option value="40">Inactivo</option>
 					</select>
+					<label for="fecha_ingreso">Fecha de Ingreso</label>
+					<input type="date" name="fecha_ingresoNew" value="<?php echo $fecha_ingreso; ?>">
 				</div>
 				<div class="submit">
-					<input class="btn_save" type="submit" value="REGISTRAR">
+					<input class="btn_save" type="submit" value="ACTUALIZAR">
 				</div>
 			</form>
 			</div>

@@ -1,5 +1,5 @@
 <?php
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -27,7 +27,7 @@
 		INNER JOIN `direcciones` t3 ON t2.`id` = t3.`persona_id` 
 		INNER JOIN `parroquias` t4 ON t4.`id` = t3.`parroquia_id`
 		INNER JOIN `nino_condicion` t5 ON t1.`id` = t5.`nino_id`
-		INNER JOIN `condiciones` t6 ON t6.`id` = t5.`condicion_id` 
+		INNER JOIN `eav` t6 ON t6.`id` = t5.`condicion_id` 
 		INNER JOIN `nino_docente` t7 ON t1.`id` = t7.`nino_id`
 		INNER JOIN `personal` t8 ON t7.`docente_id` = t8.`id`
 		INNER JOIN `personas` t9 ON t8.`persona_id` = t9.`id`
@@ -75,7 +75,7 @@
 		INNER JOIN `personas` t3 ON t2.`persona_id` = t3.`id`
 		INNER JOIN `direcciones` t4 ON t3.`id` = t4.`persona_id` 
 		INNER JOIN `parroquias` t5 ON t5.`id` = t4.`parroquia_id`
-		INNER JOIN `parentesco` t6 ON t6.`id` = t2.`parentesco_id` 
+		INNER JOIN `eav` t6 ON t6.`id` = t2.`parentesco_id` 
 		WHERE t1.`id` = $id
 	");
 
@@ -136,13 +136,7 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<section class="container section">
 			<div class="form_registro">
 			<form class="form" action="" method="post">

@@ -1,5 +1,5 @@
 <?php
-	include("conectar.php");
+	include("include/db/conectar.php");	
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -29,7 +29,6 @@
 			$alert = '<p class="msg_error">El representante ya existe</p>';
 
 		}else{
-
 			//Primero hacemos el registro
 			$insert = mysqli_query($conexion,"
 				INSERT INTO `personas`(`nombre`, `apellido`, `sexo`, `fecha_nac`, `lugar_nac`, `cedula`) 
@@ -43,13 +42,12 @@
 			$persona_id =$data['id'];
 
 			$insert = mysqli_query($conexion,"
-				INSERT INTO `representantes`(`persona_id`, `parentesco_id`, `profesion`, `telefono`, `nivel_acad`) 
-				VALUES ('$persona_id','$parentesco','$profesion','$telefono','') 
+				INSERT INTO `representantes`(`persona_id`, `parentesco_id`, `profesion`, `telefono`, `legal`) 
+				VALUES ('$persona_id','$parentesco','$profesion','$telefono','Si') 
 			");
 
 			$query = mysqli_query($conexion,"SELECT id FROM `representantes` WHERE `persona_id`='$persona_id'");
-			//Guardamos el valor obtenido en una variable $_SESSION
-			
+			//Guardamos el valor obtenido de representante en una variable $_SESSION
 			$result = mysqli_fetch_array($query);
 			$_SESSION['representante']	= $result['id'];
 
@@ -59,7 +57,8 @@
 			");
 
 			if ($insert) {
-				$alert = '<p class="msg_save">Representante registrado exitosamente</p>';
+				$alert = '<p class="msg_save">Representante legal registrado exitosamente</p>';
+				$exito=true;
 
 			}else{
 				$alert = '<p class="msg_error">No se completo su registro</p>';
@@ -102,6 +101,23 @@
 			margin-right: 5px;
 		}
 
+input[type="radio"], input[type="checkbox"] {
+    margin: 4px 0 0;
+    margin-top: 1px \9;
+    line-height: normal;
+    width: 20px;
+    float: right;
+   /* margin-right: 370px;*/
+}
+
+.inputradio, .inputradio2 {
+    width: 40px;
+}
+
+.inputradio2{
+
+}
+
 	</style>
 </head>
 <body>
@@ -114,16 +130,10 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		<section class="section">
 			<form class="form" action="" method="post">
-				<h1>Datos del representante</h1>
+				<h1>Datos del representante legal</h1>
 				<div class=""><?php echo isset($alert) ? $alert : ''; ?></div>
 				<div class="form_representante">
 					<label for="apellido">Apellidos</label>
@@ -131,14 +141,13 @@
 					<label for="nombren">Nombres</label>
 					<input type="text" name="nombre" placeholder="Nombre">
 					<label for="cedula">Cedula</label>
-					<input type="text" name="cedula" placeholder="N° Cedula">
+					<input type="text" name="cedula" placeholder="N° Cedula" value="<?php echo $_SESSION['newCI']; ?>">
 					<label for="parentesco">Parentesco</label>
 					<select name="parentesco">
 						<option>Seleccionar</option>
-						<option value="1">Padre</option>
-						<option value="2">Madre</option>
-						<option value="3">Representante Legal</option>
-						<OPTION value="4">Otro</OPTION>
+						<option value="43">Madre</option>
+						<option value="44">Padre</option>
+						<option value="45">Otro</option>
 					</select>
 				</div>
 				<div class="form_representante">
@@ -168,8 +177,19 @@
 				<div class="submit">
 					<input a href="R_datos_nino.php" class="btn_save" type="submit" value="REGISTRAR">
 					<?php 
-						if (isset($alert)) {
-							echo "<a href='R_datos_nino.php' class='btn btn-info btn-block btn-lg'>REGISTRAR NIÑO</a>";
+						if (isset($exito)) {
+							
+							if ($_POST['parentesco']==43) {
+								echo "<a href='R_datos_padre.php' class='btn btn-info btn-block btn-lg'>REGISTRAR PADRE</a>";
+							}
+
+							if ($_POST['parentesco']==44) {
+								echo "<a href='R_datos_madre.php' class='btn btn-info btn-block btn-lg'>REGISTRAR MADRE</a>";
+							}
+
+							if ($_POST['parentesco']==45) {
+								echo "<a href='R_datos_madre1.php' class='btn btn-info btn-block btn-lg'>REGISTRAR MADRE</a>";
+							}
 						}
 					?>
 

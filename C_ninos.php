@@ -1,5 +1,5 @@
 <?php 
-	include("conectar.php");
+	include("include/db/conectar.php");
 	session_start();
 	if (empty($_SESSION['active'])) {
 		header("location: index.php");
@@ -48,13 +48,7 @@
 				include("bienvenida.php");
 			 ?>
 		</div>
-		 <?php 
-		 	if ($_SESSION['rol'] == 1) {
-		 		include('include/menu.php');
-		 	}else{
-		 		include('include/menu2.php');
-		 	}
-		  ?>
+
 		  <div class="row">
 		  	<div class="col-md-12">
 				<section class="container" id="container1">
@@ -73,17 +67,10 @@
 						<?php 
 
 						$query = mysqli_query($conexion,"
-							SELECT 
-							t1.`id`, 
-							t2.`nombre`,
-							t2.`apellido`,
-							t2.`sexo`,
-							t2.`fecha_nac`,
-							t4.`descripcion` 
-							FROM `ninos` t1 
-							INNER JOIN `personas` t2 		ON t1.`persona_id` = t2.`id` 
-							INNER JOIN `nino_condicion` t3 	ON t1.`id` = t3.`nino_id`
-							INNER JOIN `condiciones` t4 	ON t4.`id` = t3.`condicion_id`
+SELECT t1.id, t2.nombre,t2.apellido,t2.sexo,t2.fecha_nac,t4.descripcion FROM `ninos` t1 
+INNER JOIN personas t2 ON t1.persona_id=t2.id
+INNER JOIN nino_condicion t3 ON t1.id=t3.nino_id
+INNER JOIN eav t4 ON t3.condicion_id=t4.id
 						");
 
 						$result = mysqli_num_rows($query);
@@ -105,7 +92,8 @@
 								<td>
 									<a class="link_edit" href="actualizar_ninos.php?id=<?php echo $data['id'];?>">Editar</a>
 
-									<a class="link_edit" href="constancia_nino.php?id=<?php echo $data['id'];?>">Generar constancia</a>
+									<a class="link_edit" href="documentos/constancia.php?id=<?php echo $data['id'];?>">Generar constancia</a>
+									<a class="link_edit" href="R_expedientes.php?id=<?php echo $data['id']; ?>">Crear expediente</a>
 
 								</td>
 							</tr>
@@ -137,3 +125,4 @@ $(document).ready(function() {
 </script>
 </html>
 
+<div class="img-bandera"><a href="#"><img width="70px" height="40px" style="margin: auto;" src=""></a></div>
