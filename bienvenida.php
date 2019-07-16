@@ -1,7 +1,7 @@
 <div class="usern">
 	Bienvenido al sistema de registro CDI Maturín. Usuario en linea:
 	<?php 
-	if ($_SESSION['Usuario']==NULL) {
+	if (!isset($_SESSION['active'])) {
 		header('Location: index.php');
 	}
 

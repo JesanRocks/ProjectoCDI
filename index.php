@@ -48,6 +48,7 @@
 
 			}else{
 				$alert = '<p class="msg_error">Usuario Incorrecto</p>';
+				$_SESSION['active'] = true;
 				//session_destroy();
 			}
 
