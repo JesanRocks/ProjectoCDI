@@ -11,7 +11,7 @@
 					</div>
 					<div class="collapse navbar-collapse" id="nav">
 						<ul class="nav navbar-nav">
-							<li class=""><a href="admin.php"><span class="fa fa-home"></span> Inicio</a></li>
+							<li class=""><a href="sistema.php"><span class="fa fa-home"></span> Inicio</a></li>
 							<li class=""><a href="validar_inscripcion.php"><span class="fa fa-home"></span> Inscripciones</a></li>
 
 				<li class="dropdown">
