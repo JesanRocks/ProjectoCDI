@@ -5,8 +5,17 @@
 		header("location: index.php");
 	}
 
-	$query = "SELECT * FROM expedientes
-				INNER JOIN personas on expedientes.id_personas = personas.id";
+	$query = "SELECT 
+t1.`fecha_expediente`, t1.`descripcion`, 
+t3.`nombre`, t3.`apellido`,
+t5.`nombre` AS nomDocente, t5.`apellido` AS apeDocente 
+FROM `expedientes` t1 
+INNER JOIN ninos t2 ON t1.nino_id = t2.id
+INNER JOIN personas t3 ON t3.id = t2.persona_id
+INNER JOIN personal t4 ON t4.id = t1.docente_id
+INNER JOIN personas t5 ON t5.id = t4.persona_id
+
+";
 	$sql = mysqli_query($conexion, $query);
 ?>
 <!DOCTYPE html>
@@ -80,7 +89,7 @@
 								<td><?php echo $data['fecha_expediente']; ?></td>
 								<td><?php echo $data['descripcion']; ?></td>
 								<td><?php echo $data['nombre'].' '.$data['apellido']; ?></td>
-								<td><?php echo $data['nombre'].' '.$data['apellido']; ?></td>
+								<td><?php echo $data['nomDocente'].' '.$data['apeDocente']; ?></td>
 							</tr>
 						<?php
 							}

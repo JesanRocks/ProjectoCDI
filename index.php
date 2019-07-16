@@ -26,17 +26,20 @@
 			if ($result > 0 ){
 				
 				$query = mysqli_query($conexion,"
-				SELECT t1.`nombre`, t1.`apellido`,t1.`cedula`, t2.`profesion`, t3.`rol_id`
-				FROM `personas` t1
-				inner JOIN `personal` t2 ON t1.`id` = t2.`persona_id` 
-				inner JOIN `usuarios` t3 ON t1.`id` = t3.`persona_id`
-				WHERE t1.`cedula` = $cedula
+					SELECT 
+					t1.`nombre`, t1.`apellido`,t1.`cedula`, 
+					t2.`id` AS docenteID, t2.`profesion`, 
+					t3.`rol_id` 
+					FROM `personas` t1 
+					inner JOIN `personal` t2 ON t1.`id` = t2.`persona_id` 
+					inner JOIN `usuarios` t3 ON t1.`id` = t3.`persona_id` 
+					WHERE t1.`cedula` = $cedula
 				");
 
 				$data = mysqli_fetch_array($query);
 
 				$_SESSION['active'] = true;
-				$_SESSION['id']     = $data['id'];
+				$_SESSION['id']     = $data['docenteID'];
 				$_SESSION['nombre'] = $data['nombre']." ".$data['apellido'];
 				$_SESSION['cedula'] = $data['cedula'];
 				$_SESSION['rol']    = $data['rol_id'];

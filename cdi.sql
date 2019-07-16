@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-07-2019 a las 01:30:55
+-- Tiempo de generación: 17-07-2019 a las 00:51:42
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -42,11 +42,12 @@ CREATE TABLE `direcciones` (
 INSERT INTO `direcciones` (`id`, `descripcion`, `parroquia_id`, `persona_id`) VALUES
 (1, 'Urb. Los Moriches', 4, 1),
 (29, 'Urb Los Moriches', 4, 2),
-(35, 'Plaza Bolívar', 1, 0),
-(36, 'Calle Bolívar', 1, 4),
-(37, 'Calle Bolívar', 1, 5),
-(38, 'Calle Bolívar', 1, 6),
-(39, 'Urb. Los Moriches', 4, 7);
+(39, 'Urb. Los Moriches', 4, 3),
+(44, 'Calle Bolívar', 1, 4),
+(45, 'Calle Bolívar', 1, 5),
+(56, 'Calle Bolívar', 1, 6),
+(57, 'Calle Bolívar', 1, 7),
+(58, 'Calle Bolívar', 1, 8);
 
 -- --------------------------------------------------------
 
@@ -73,7 +74,7 @@ INSERT INTO `eav` (`id`, `descripcion`, `tipo_id`, `tipo`, `cat_id`, `categoria`
 (3, 'Cargos', 2, 'Datos personal', 1, 'No tiene'),
 (4, 'Director(a)', 3, 'Cargos', 2, 'Datos personal'),
 (5, 'Subdirector(a)', 3, 'Cargos', 2, 'Datos personal'),
-(6, 'Docente', 3, 'Cargos', 2, 'Datos personal'),
+(6, 'Docente Especialista', 3, 'Cargos', 2, 'Datos personal'),
 (7, 'Secretaria(a)', 3, 'Cargos', 2, 'Datos personal'),
 (8, 'Datos del niño', 1, 'No tiene', 1, 'No tiene'),
 (9, 'Condiciones', 8, 'Datos del niño', 1, 'No tiene'),
@@ -116,7 +117,34 @@ INSERT INTO `eav` (`id`, `descripcion`, `tipo_id`, `tipo`, `cat_id`, `categoria`
 (46, 'Datos de usuario', 1, 'No tiene', 1, 'No tiene'),
 (47, 'Roles', 46, 'Datos de usuario', 1, 'No tiene'),
 (48, 'Administrador', 47, 'Roles', 46, 'Datos de usuario'),
-(49, 'Usuario', 47, 'Roles', 46, 'Datos de usuario');
+(49, 'Usuario', 47, 'Roles', 46, 'Datos de usuario'),
+(50, 'Datos socioeconomicos', 1, 'No tiene', 1, 'No tiene'),
+(51, 'Vivienda', 50, 'Datos socioeconomicos', 1, 'No tiene'),
+(52, 'Casa', 51, 'Vivienda', 50, 'Datos socioeconomicos'),
+(53, 'Quinta', 51, 'Vivienda', 50, 'Datos socioeconomicos'),
+(54, 'Apto', 51, 'Vivienda', 50, 'Datos socioeconomicos'),
+(55, 'Rural', 51, 'Vivienda', 50, 'Datos socioeconomicos'),
+(56, 'Rancho', 51, 'Vivienda', 50, 'Datos socioeconomicos'),
+(57, 'Pertenencia', 50, 'Datos socioeconomicos', 1, 'No tiene'),
+(58, 'Propia', 57, 'Pertenencia', 50, 'Datos socioeconomicos'),
+(59, 'Alquilada', 57, 'Pertenencia', 50, 'Datos socioeconomicos'),
+(60, 'Familiar', 57, 'Pertenencia', 50, 'Datos socioeconomicos'),
+(61, 'Condicion', 50, 'Datos socioeconomicos', 1, 'No tiene'),
+(62, 'Buena', 61, 'Condicion', 50, 'Datos socioeconomicos'),
+(63, 'Regular', 61, 'Condicion', 50, 'Datos socioeconomicos'),
+(64, 'Mala', 61, 'Condicion', 50, 'Datos socioeconomicos'),
+(65, 'Servicios', 50, 'Datos socioeconomicos', 1, 'No tiene'),
+(66, 'Agua', 65, 'Servicios', 50, 'Datos socioeconomicos'),
+(67, 'Luz', 65, 'Servicios', 50, 'Datos socioeconomicos'),
+(68, 'Aseo', 65, 'Servicios', 50, 'Datos socioeconomicos'),
+(69, 'Posesiones', 50, 'Datos socioeconomicos', 1, 'No tiene'),
+(70, 'Radio', 69, 'Posesiones', 50, 'Datos socioeconomicos'),
+(71, 'TV', 69, 'Posesiones', 50, 'Datos socioeconomicos'),
+(72, 'Computadora', 69, 'Posesiones', 50, 'Datos socioeconomicos'),
+(73, 'Pediatra', 3, 'Cargos', 2, 'Datos personal'),
+(74, 'Fisioterapeuta', 3, 'Cargos', 2, 'Datos personal'),
+(75, 'Terapista de Lenguaje', 3, 'Cargos', 2, 'Datos personal'),
+(76, 'Psicólogo', 3, 'Cargos', 2, 'Datos personal');
 
 -- --------------------------------------------------------
 
@@ -128,7 +156,8 @@ CREATE TABLE `expedientes` (
   `id` int(11) NOT NULL,
   `fecha_expediente` datetime DEFAULT NULL,
   `descripcion` longtext,
-  `id_personas` int(11) DEFAULT NULL
+  `nino_id` int(11) DEFAULT NULL,
+  `docente_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -151,7 +180,9 @@ CREATE TABLE `ninos` (
 --
 
 INSERT INTO `ninos` (`id`, `nivel_educ`, `fecha_ingreso`, `persona_id`, `representante_id`, `estatus_id`) VALUES
-(1, 'Maternal', '2018-02-12', 6, 1, 39);
+(1, 'Inicial', '2019-07-16', 6, 4, 39),
+(2, 'Inicial', '2019-07-01', 7, 4, 39),
+(3, 'Inicial', '2019-07-03', 8, 4, 39);
 
 -- --------------------------------------------------------
 
@@ -170,7 +201,9 @@ CREATE TABLE `nino_condicion` (
 --
 
 INSERT INTO `nino_condicion` (`id`, `nino_id`, `condicion_id`) VALUES
-(1, 1, 35);
+(1, 1, 18),
+(2, 2, 16),
+(3, 3, 14);
 
 -- --------------------------------------------------------
 
@@ -189,7 +222,9 @@ CREATE TABLE `nino_docente` (
 --
 
 INSERT INTO `nino_docente` (`id`, `nino_id`, `docente_id`) VALUES
-(1, 1, 6);
+(1, 1, 2),
+(2, 2, 2),
+(3, 3, 3);
 
 -- --------------------------------------------------------
 
@@ -240,8 +275,8 @@ CREATE TABLE `personal` (
 
 INSERT INTO `personal` (`id`, `persona_id`, `telefono`, `profesion`, `cargo_id`, `fecha_ingreso`, `estatus_id`) VALUES
 (1, 1, '04249189923', 'TSU en Informática', 4, '2019-07-04', 39),
-(6, 2, '02923311644', 'Profesora lengua y literatura', 6, '2017-12-04', 39),
-(7, 7, '02923311644', 'Lcda en Educación', 6, '2015-02-04', 39);
+(2, 2, '02923311644', 'Profesora lengua y literatura', 6, '2017-12-04', 39),
+(3, 3, '02923311644', 'Lcda en Educación', 6, '2015-02-04', 39);
 
 -- --------------------------------------------------------
 
@@ -264,13 +299,14 @@ CREATE TABLE `personas` (
 --
 
 INSERT INTO `personas` (`id`, `nombre`, `apellido`, `sexo`, `fecha_nac`, `lugar_nac`, `cedula`) VALUES
-(0, 'Karla', 'Moza', '', '1989-01-02', '', '8989552'),
 (1, 'Jesús', 'Rodríguez', 'Masculino', '1998-04-10', 'Caicara', '26997629'),
 (2, 'Mariángela', 'Rodriguez', 'N/A', '2019-07-05', 'CDI Usuario', '22708373'),
-(4, 'Maria', 'Lopez', '', '1989-05-06', '', '8989551'),
-(5, 'Adrian', 'Moza', '', '1989-07-01', '', '8989550'),
-(6, 'José Alejandro', 'Moza', 'Masculino', '2016-04-04', 'Maturín', '8989552-01'),
-(7, 'Maria', 'Figuera', 'N/A', '2019-07-05', 'CDI Usuario', '9898255');
+(3, 'Maria', 'Figuera', 'N/A', '2019-07-05', 'CDI Usuario', '9898255'),
+(4, 'Karla', 'Moza', '', '1989-07-01', '', '8989552'),
+(5, 'Victor', 'Alfonzo', '', '1989-07-01', '', '8989551'),
+(6, 'Jose Alejandro', 'Alfonzo', 'Masculino', '2017-04-10', 'Maturín', '8989552-01'),
+(7, 'Alberto', 'Moza', 'Masculino', '2017-02-21', 'Maturín', '8989552-02'),
+(8, 'Andrea', 'Moza', 'Femenino', '2017-06-26', 'Maturín', '8989552-03');
 
 -- --------------------------------------------------------
 
@@ -293,9 +329,39 @@ CREATE TABLE `representantes` (
 --
 
 INSERT INTO `representantes` (`id`, `persona_id`, `parentesco_id`, `profesion`, `telefono`, `legal`, `depende_id`) VALUES
-(1, 0, 45, 'Ambientalista', '04241122333', 'Si', NULL),
-(2, 4, 43, 'Ama de casa', '04242233444', 'No', 1),
-(3, 5, 44, 'Albañil', '04243344555', 'No', 1);
+(4, 4, 43, 'Ambientalista', '04241122333', 'Si', NULL),
+(5, 5, 44, 'Albañil', '04242233444', 'No', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `socioeconomico`
+--
+
+CREATE TABLE `socioeconomico` (
+  `id` int(11) NOT NULL,
+  `vivienda` int(11) NOT NULL,
+  `pertenece` int(11) NOT NULL,
+  `condicion` int(11) NOT NULL,
+  `agua` int(11) NOT NULL,
+  `luz` int(11) NOT NULL,
+  `aseo` int(11) NOT NULL,
+  `otroServicio` mediumtext,
+  `radio` int(11) NOT NULL,
+  `tv` int(11) NOT NULL,
+  `pc` int(11) NOT NULL,
+  `otroBien` mediumtext,
+  `nino_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `socioeconomico`
+--
+
+INSERT INTO `socioeconomico` (`id`, `vivienda`, `pertenece`, `condicion`, `agua`, `luz`, `aseo`, `otroServicio`, `radio`, `tv`, `pc`, `otroBien`, `nino_id`) VALUES
+(1, 52, 58, 62, 1, 1, 68, 'DirecTV', 70, 1, 1, 'PlayStation 4', 1),
+(2, 52, 60, 62, 66, 67, 68, '', 70, 71, 72, '', 2),
+(3, 52, 59, 62, 66, 67, 1, 'Netflix', 1, 71, 72, '', 3);
 
 -- --------------------------------------------------------
 
@@ -318,7 +384,7 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `cedula`, `clave`, `rol_id`, `persona_id`) VALUES
 (1, 26997629, 26997629, 48, 1),
 (7, 22708373, 22708373, 49, 2),
-(8, 9898255, 9898255, 49, 7);
+(8, 9898255, 9898255, 49, 3);
 
 --
 -- Índices para tablas volcadas
@@ -346,7 +412,8 @@ ALTER TABLE `eav`
 --
 ALTER TABLE `expedientes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_personas` (`id_personas`);
+  ADD KEY `id_personas` (`nino_id`),
+  ADD KEY `docente_id` (`docente_id`);
 
 --
 -- Indices de la tabla `ninos`
@@ -405,6 +472,22 @@ ALTER TABLE `representantes`
   ADD KEY `depende_id` (`depende_id`);
 
 --
+-- Indices de la tabla `socioeconomico`
+--
+ALTER TABLE `socioeconomico`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vivienda` (`vivienda`),
+  ADD KEY `pertenece` (`pertenece`),
+  ADD KEY `condicion` (`condicion`),
+  ADD KEY `agua` (`agua`),
+  ADD KEY `aseo` (`aseo`),
+  ADD KEY `luz` (`luz`),
+  ADD KEY `radio` (`radio`),
+  ADD KEY `tv` (`tv`),
+  ADD KEY `pc` (`pc`),
+  ADD KEY `nino_id` (`nino_id`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -420,37 +503,37 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `direcciones`
 --
 ALTER TABLE `direcciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de la tabla `eav`
 --
 ALTER TABLE `eav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT de la tabla `expedientes`
 --
 ALTER TABLE `expedientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `ninos`
 --
 ALTER TABLE `ninos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `nino_condicion`
 --
 ALTER TABLE `nino_condicion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `nino_docente`
 --
 ALTER TABLE `nino_docente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `parroquias`
@@ -468,12 +551,18 @@ ALTER TABLE `personal`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `representantes`
 --
 ALTER TABLE `representantes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `socioeconomico`
+--
+ALTER TABLE `socioeconomico`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
@@ -504,7 +593,8 @@ ALTER TABLE `eav`
 -- Filtros para la tabla `expedientes`
 --
 ALTER TABLE `expedientes`
-  ADD CONSTRAINT `expedientes_ibfk_1` FOREIGN KEY (`id_personas`) REFERENCES `ninos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `expedientes_ibfk_1` FOREIGN KEY (`nino_id`) REFERENCES `ninos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `expedientes_ibfk_2` FOREIGN KEY (`docente_id`) REFERENCES `personal` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `ninos`
@@ -543,6 +633,21 @@ ALTER TABLE `representantes`
   ADD CONSTRAINT `representantes_ibfk_1` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `representantes_ibfk_2` FOREIGN KEY (`parentesco_id`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `representantes_ibfk_3` FOREIGN KEY (`depende_id`) REFERENCES `representantes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `socioeconomico`
+--
+ALTER TABLE `socioeconomico`
+  ADD CONSTRAINT `socioeconomico_ibfk_1` FOREIGN KEY (`agua`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_10` FOREIGN KEY (`nino_id`) REFERENCES `ninos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_2` FOREIGN KEY (`aseo`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_3` FOREIGN KEY (`condicion`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_4` FOREIGN KEY (`luz`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_5` FOREIGN KEY (`pc`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_6` FOREIGN KEY (`pertenece`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_7` FOREIGN KEY (`radio`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_8` FOREIGN KEY (`tv`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `socioeconomico_ibfk_9` FOREIGN KEY (`vivienda`) REFERENCES `eav` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `usuarios`

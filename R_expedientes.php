@@ -9,11 +9,12 @@
 		$expediente = $_POST['expediente'];
 		$id_persona = $_POST['id_personas'];
 		date_default_timezone_set('America/Caracas');
-		$fecha = date("Y-m-d");
+		$fecha = date("Y-m-d h:i:s");
 
 		$insert = mysqli_query($conexion,"
-				INSERT INTO `expedientes`(`fecha_expediente`, `descripcion`, `id_personas`) 
-				VALUES ('$fecha','$expediente','$id_persona')");
+			INSERT INTO `expedientes`(`fecha_expediente`, `descripcion`, `nino_id`, `docente_id`) 
+			VALUES ('$fecha','$expediente','$id_persona','".$_SESSION['id']."')
+		");
 
 		if ($insert >= 1) {
 			header("location: C_expedientes.php");
@@ -81,36 +82,36 @@
 						<table id="table-ninos">
 							<thead>
 								<tr>
-									<th>Docente encargado</th>
+									<!-- <th>Docente encargado</th> -->
 									<th>Formular evaluacion</th>
 									<th>Acción</th>
 								</tr>
 								<tr>
-									<td>
+									<!-- <td>
 										<select class="form-control">
 											<option value="0">Seleccione</option>
 									        <?php
-									          $query = mysqli_query ($conexion,"SELECT 
-t1.`id`,t1.`telefono`, t1.`profesion`, t1.`cargo_id`, 
-t2.`nombre`, t2.`apellido`, t2.`cedula`, t2.`fecha_nac`,
-t3.`descripcion` AS direccion,
-t4.`descripcion` AS parroquia,
-t6.`descripcion` AS cargo
-FROM `personal` t1 
-INNER JOIN `personas` t2 ON t1.`persona_id` = t2.`id` 
-INNER JOIN `direcciones` t3 ON t3.`persona_id` = t2.`id`
-INNER JOIN `parroquias` t4 ON t3.`parroquia_id` = t4.`id`
-INNER JOIN `eav` t6 ON t1.`cargo_id` = t6.`id`
-WHERE t1.`cargo_id`= 6
-");
-									          while ($docente = mysqli_fetch_array($query)) {
-									            echo '<option value="">'.$docente[nombre].' '.$docente[apellido].'</option>';
-									          }
+// 									          $query = mysqli_query ($conexion,"SELECT 
+// t1.`id`,t1.`telefono`, t1.`profesion`, t1.`cargo_id`, 
+// t2.`nombre`, t2.`apellido`, t2.`cedula`, t2.`fecha_nac`,
+// t3.`descripcion` AS direccion,
+// t4.`descripcion` AS parroquia,
+// t6.`descripcion` AS cargo
+// FROM `personal` t1 
+// INNER JOIN `personas` t2 ON t1.`persona_id` = t2.`id` 
+// INNER JOIN `direcciones` t3 ON t3.`persona_id` = t2.`id`
+// INNER JOIN `parroquias` t4 ON t3.`parroquia_id` = t4.`id`
+// INNER JOIN `eav` t6 ON t1.`cargo_id` = t6.`id`
+// WHERE t1.`cargo_id`= 6
+// ");
+// 									          while ($docente = mysqli_fetch_array($query)) {
+// 									            echo '<option value="">'.$docente[nombre].' '.$docente[apellido].'</option>';
+// 									          }
 									        ?>
 										</select>
-									</td>
-									<td><textarea name="expediente"></textarea></td>
-									<td><input class="btn btn-primary" type="submit" name="ENVIAR" onclick="alert('Guardado exitosa mente')" value="Guardar expediente"></td>
+									</td> -->
+									<td><textarea name="expediente" placeholder=" Escriba detallamente la evaluación" required></textarea></td>
+									<td><input class="btn btn-primary" type="submit" name="ENVIAR" onclick="alert('Guardado exitosamente')" value="Guardar expediente"></td>
 								</tr>
 							</thead>
 						</table>

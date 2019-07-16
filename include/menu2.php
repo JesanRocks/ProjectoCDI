@@ -17,9 +17,8 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="fa fa-address-book"></span> Consultas <i class="caret"></i></a>
 					<ul class="dropdown-menu" role="menu">
-<!-- 						<li><a href="C_docentes.php">Consultar Docentes</a></li>
-						<li class="divider"></li> -->
 						<li><a href="C_ninos.php">Consultar Niños</a></li>
+						<li><a href="C_expedientes.php">Consultar Evaluaciones</a></li>
 					</ul>
 				</li>
 				<li class=""><a href="documentos/reporte.php"><span class="fa fa-home"></span> Reporte</a></li>

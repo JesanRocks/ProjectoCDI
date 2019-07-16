@@ -29,6 +29,8 @@
 			if ($result > 0) {
 				$alert = '<p class="msg_error">Este niño ya existe</p>';
 			}else{
+				extract($_POST);
+
 				$insert = mysqli_query($conexion,"
 					INSERT INTO `personas`( `nombre`, `apellido`, `sexo`, `fecha_nac`, `lugar_nac`, `cedula`) 
 					VALUES ('$nombre','$apellido','$sexo','$fecha','$lugar','$cedula')
@@ -59,6 +61,22 @@
 
         		$insert = mysqli_query($conexion,"INSERT INTO nino_condicion (nino_id, condicion_id) 
                       VALUES ('$nino_id','$condicion')");
+
+        		if( !isset($agua) ){ $agua="1";}
+
+        		if(!isset($aseo)){ $aseo="1";}
+
+        		if(!isset($luz)){ $luz="1";}
+
+        		if(!isset($radio)){ $radio="1";}
+
+        		if(!isset($tv)){ $tv="1";}
+
+        		if(!isset($pc)){ $pc="1";}
+
+        		$insert = mysqli_query($conexion,"INSERT INTO `socioeconomico`(`vivienda`, `pertenece`, `condicion`, `agua`, `luz`, `aseo`,  `otroServicio`, `radio`, `tv`, `pc`, `otroBien`, `nino_id`) 
+        			VALUES ('$vivienda','$pertenece','$cdv','$agua','$luz','$aseo','$otroServicio','$radio',$tv,'$pc','$otroBien','$nino_id')
+        		");
 
 				if ($insert) {
 					$alert = '<p class="msg_save">Registro completado exitosamente</p>';
@@ -100,6 +118,9 @@
 			margin-right: 5px;
 		}
 
+		.check{
+			margin:10px;
+		}
 	</style>
 </head>
 <body>
@@ -150,6 +171,30 @@
 						  }
 						?>
 					</select>
+					<label for="fecha_ingreso">Fecha de Ingreso</label>
+					<input type="date" name="fecha_ingreso">
+					<label for="estatus">Estatus</label>
+					<select name="estatus">
+						<option value="39">Activo</option>
+						<option value="40">Inactivo</option>
+					</select>
+					<div>	
+						<label for="Posee">Posee</label><br>
+						<label class="check">
+							Radio
+							<input type="checkbox" name="radio" value="70">
+						</label>
+						<label class="check">
+							TV
+							<input type="checkbox" name="tv" value="71">
+						</label>
+						<label class="check">
+							Computadora
+							<input type="checkbox" name="pc" value="72">
+						</label><br>
+						<label>Otros</label>
+						<input type="text"  name="otroBien" placeholder="Otros articulos">
+					</div>
 				</div>
 				<div class="form_representado">
 					<label for="cedula">Cedula escolar</label>
@@ -182,14 +227,63 @@
 					</select>
 				  	<label for="direcion">Dirección</label>
 					<input type="text" name="direccion" placeholder="Dirección">
-					<label for="estatus">Estatus</label>
-					<select name="estatus">
-						<option value="39">Activo</option>
-						<option value="40">Inactivo</option>
+					
+					<label for="condicion">Tipo de vivienda</label>
+					<select name="vivienda" id="vivienda" required>
+						<option value="">Seleccionar</option>
+						<?php
+						  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=51 ORDER BY `eav`.`descripcion` ASC");
+						  while ($filaP=mysqli_fetch_assoc($ejc)) {
+						?>
+						  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion']; ?></option>
+						<?php
+						  }
+						?>
 					</select>
-					<label for="fecha_ingreso">Fecha de Ingreso</label>
-					<input type="date" name="fecha_ingreso">
+
+					<label for="condicion">Propiedad</label>
+					<select name="pertenece" id="pertenece" required>
+						<option value="">Seleccionar</option>
+						<?php
+						  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=57 ORDER BY `eav`.`descripcion` ASC");
+						  while ($filaP=mysqli_fetch_assoc($ejc)) {
+						?>
+						  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion']; ?></option>
+						<?php
+						  }
+						?>
+					</select>
+
+					<label for="">Condicion de vivienda</label>
+					<select name="cdv" id="cdv" required>
+						<option value="">Seleccionar</option>
+						<?php
+						  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=61 ORDER BY `eav`.`descripcion` ASC");
+						  while ($filaP=mysqli_fetch_assoc($ejc)) {
+						?>
+						  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion']; ?></option>
+						<?php
+						  }
+						?>
+					</select>
+					<div>
+						<label for="Servicios">Servicios</label><br>
+						<label class="check">
+							Agua<input type="checkbox" name="agua" value="66">
+						</label>
+						<label class="check">
+							Luz<input type="checkbox" name="luz" value="67">
+						</label>
+						<label class="check">
+							Aseo<input type="checkbox" name="aseo" value="68">
+						</label><br>
+						<label>Otros</label>	
+						<input type="text" name="otroServicio" placeholder="Otros servicios">	
+					</div>
+
 				</div>
+
+
 				<div class="submit">
 					<input class="btn_save" type="submit" value="REGISTRAR">
 				</div>

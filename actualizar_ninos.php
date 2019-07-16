@@ -13,27 +13,22 @@
 
 	$sql = mysqli_query($conexion,"
 		SELECT 
-		t1.`id`,
-		t1.`nivel_educ`,
-		t1.`fecha_ingreso`,
-		t1.`estatus_id`,
-		t2.`id` AS persona_id,
-		t2.`nombre`,
-		t2.`apellido`,
-		t2.`sexo`,
-		t2.`cedula`,
-		t2.`fecha_nac`,
-		t2.`lugar_nac`,
-		t3.`descripcion` AS direccion,
-		t3.`parroquia_id`,
+		t1.`id`, t1.`nivel_educ`, t1.`fecha_ingreso`, t1.`estatus_id`,
+		t2.`id` AS persona_id,t2.`nombre`,t2.`apellido`,t2.`sexo`,t2.`cedula`,t2.`fecha_nac`,t2.`lugar_nac`,
+		t3.`descripcion` AS direccion, t3.`parroquia_id`,
 		t4.`descripcion` AS parroquia, 
 		t5.`condicion_id`,
 		t6.`descripcion` AS condicion,
 		t7.`docente_id`,
 		t8.`persona_id` AS docente,
-		t9.`nombre` AS nomDocente,
-		t9.`apellido` AS apeDocente,
-		t10.`descripcion` AS estatus
+		t9.`nombre` AS nomDocente, t9.`apellido` AS apeDocente,
+		t10.`descripcion` AS estatus,
+    	t11.`vivienda` AS vivienda_id, t11.`pertenece` AS pertenece_id, t11.`condicion` AS cdv_id, 
+    	t11.`agua`, t11.`aseo`, t11.`luz`, t11.`otroServicio`,
+    	t11.`radio`, t11.`tv`, t11.`pc`, t11.`otroBien`, 
+    	t12.`descripcion` AS vivienda,
+    	t13.`descripcion` AS pertenece,
+    	t14.`descripcion` AS cdv
 		FROM `ninos` t1 
 		INNER JOIN `personas` 		t2 ON t1.`persona_id` = t2.`id`
 		INNER JOIN `direcciones` 	t3 ON t2.`id` = t3.`persona_id` 
@@ -43,7 +38,11 @@
 		INNER JOIN `nino_docente` 	t7 ON t7.`id` = t5.`nino_id`
 		INNER JOIN `personal`		t8 ON t8.`id` = t7.`docente_id`
 		INNER JOIN `personas` 		t9 ON t8.`persona_id` = t9.`id` 
-		INNER JOIN `eav` 		t10 ON t10.`id` = t1.`estatus_id` 
+		INNER JOIN `eav` 		t10 ON t10.`id` = t1.`estatus_id`
+        INNER JOIN `socioeconomico` t11 ON t11.`nino_id` = t1.`id`
+		INNER JOIN `eav` 		t12 ON t12.`id` = t11.`vivienda`
+		INNER JOIN `eav` 		t13 ON t13.`id` = t11.`pertenece`
+		INNER JOIN `eav` 		t14 ON t14.`id` = t11.`condicion`       
 		WHERE t1.`id` = $id
 	");
 
@@ -74,6 +73,23 @@
 			$estatus_id    = $data['estatus_id'];
 			$estatus   	   = $data['estatus'];
 
+			$vivienda_id   = $data['vivienda_id'];
+			$vivienda  	   = $data['vivienda'];
+
+			$pertenece_id  = $data['pertenece_id'];
+			$pertenece     = $data['pertenece'];
+
+			$cdv_id   	   = $data['cdv_id'];
+			$cdv   	       = $data['cdv'];
+
+			$agua   	   = $data['agua'];
+			$aseo   	   = $data['aseo'];
+			$luz   	   = $data['luz'];
+			$radio   	   = $data['radio'];
+			$tv   	   = $data['tv'];
+			$pc   	   = $data['pc'];
+			$otroBien   	   = $data['otroBien'];			
+			$otroServicio   	   = $data['otroServicio'];
 		}
 	}
 
@@ -91,6 +107,20 @@
 
 			$ejec=mysqli_query($conexion,"UPDATE `nino_docente` SET `docente_id`='$docenteNew' WHERE `nino_id`='$id'");
 			
+			if( !isset($aguaNew) ){ $aguaNew="1";}
+
+        	if(!isset($aseoNew)){ $aseoNew="1";}
+
+        	if(!isset($luzNew)){ $luzNew="1";}
+
+        	if(!isset($radioNew)){ $radioNew="1";}
+
+        	if(!isset($tvNew)){ $tvNew="1";}
+
+        	if(!isset($pcNew)){ $pcNew="1";}
+
+			$ejec=mysqli_query($conexion,"UPDATE `socioeconomico` SET `vivienda`='$viviendaNew',`pertenece`='$perteneceNew',`condicion`='$condicionNew',`agua`='$aguaNew',`luz`='$luzNew',`aseo`='$aseoNew',`otroServicio`='$otroServicioNew',`radio`='$radioNew',`tv`='$tvNew',`pc`='$pcNew',`otroBien`='$otroBienNew' WHERE `nino_id`='$id'");
+
 			$ejec=mysqli_query($conexion,"UPDATE `personas` SET `nombre`='$nombreNew',`apellido`='$apellidoNew',`sexo`='$sexoNew',`fecha_nac`='$fechaNew',`lugar_nac`='$lugarNew',`cedula`='$cedulaNew' WHERE `personas`.`id`= '$persona_id'");
 
 			$ejec=mysqli_query($conexion,"UPDATE `direcciones` SET `descripcion`='$direccionNew',`parroquia_id`='$parroquiaNew' WHERE `persona_id`= '$persona_id'");
@@ -134,6 +164,11 @@
 			margin-right:5px;
 		}
 
+		.check{
+			margin:20px;
+			width: 60px;
+			text-align: center;
+		}
 	</style>
 </head>
 <body>
@@ -185,6 +220,32 @@
 						  }
 						?>
 					</select>
+					<label for="fecha_ingreso">Fecha de Ingreso</label>
+					<input type="date" name="fecha_ingresoNew" value="<?php echo $fecha_ingreso; ?>">
+					
+					<label for="estatus">Estatus</label>
+					<select name="estatusNew">
+						<option value="<?php echo $estatus_id; ?>"><?php echo $estatus; ?>*</option>
+						<option value="39">Activo</option>
+						<option value="40">Inactivo</option>
+					</select>
+					<div class="row">	
+						<label for="Posee">Posee</label><br>
+						<div class="col-sm-4"><label class="check">
+							Radio
+							<input type="checkbox" name="radioNew" value="70" <?php if ($radio=="70") { echo "checked";}?> >
+						</label></div>
+						<div class="col-sm-4"><label class="check">
+							TV
+							<input type="checkbox" name="tvNew" value="71" <?php if ($tv=="71") { echo "checked";}?> >
+						</label></div>
+						<div class="col-sm-4"><label>
+							Computadora
+							<input type="checkbox" name="pcNew" value="72" <?php if ($pc=="72") { echo "checked";}?> >
+						</label></div>
+						<div class="col-sm-12"><label>Otros</label>
+						<input type="text"  name="otroBienNew" placeholder="Otros articulos" value="<?php echo $otroBien;?>"></div>
+					</div>
 				</div>
 				<div class="form_representado">
 					<label for="cedula">Cédula escolar</label>
@@ -217,15 +278,62 @@
 					</select>
 					<label for="direcion">Dirección</label>
 					<input type="text" name="direccionNew" placeholder="Dirección" value="<?php echo $direccion; ?>">
-					<label for="estatus">Estatus</label>
-					<select name="estatusNew">
-						<option value="<?php echo $estatus_id; ?>"><?php echo $estatus; ?>*</option>
-						<option value="39">Activo</option>
-						<option value="40">Inactivo</option>
+					
+					<label for="condicion">Tipo de vivienda</label>
+					<select name="viviendaNew" id="vivienda" required>
+						<option value="<?php echo $vivienda_id; ?>"><?php echo $vivienda; ?>*</option>
+						<?php
+						  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=51 ORDER BY `eav`.`descripcion` ASC");
+						  while ($filaP=mysqli_fetch_assoc($ejc)) {
+						?>
+						  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion']; ?></option>
+						<?php
+						  }
+						?>
 					</select>
-					<label for="fecha_ingreso">Fecha de Ingreso</label>
-					<input type="date" name="fecha_ingresoNew" value="<?php echo $fecha_ingreso; ?>">
+
+					<label for="condicion">Propiedad</label>
+					<select name="perteneceNew" id="pertenece" required>
+						<option value="<?php echo $pertenece_id; ?>"><?php echo $pertenece; ?>*</option>
+						<?php
+						  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=57 ORDER BY `eav`.`descripcion` ASC");
+						  while ($filaP=mysqli_fetch_assoc($ejc)) {
+						?>
+						  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion']; ?></option>
+						<?php
+						  }
+						?>
+					</select>
+
+					<label for="">Condicion de vivienda</label>
+					<select name="cdvNew" id="cdv" required>
+						<option value="<?php echo $cdv_id; ?>"><?php echo $cdv; ?>*</option>
+						<?php
+						  $ejc=mysqli_query($conexion,"SELECT * FROM `eav` WHERE tipo_id=61 ORDER BY `eav`.`descripcion` ASC");
+						  while ($filaP=mysqli_fetch_assoc($ejc)) {
+						?>
+						  <option value="<?php echo $filaP['id']; ?>"> <?php echo $filaP['descripcion']; ?></option>
+						<?php
+						  }
+						?>
+					</select>
+
+					<div class="row">
+						<label for="Servicios">Servicios</label><br>
+						<div class="col-sm-4"><label class="check">
+							Agua<input type="checkbox" name="aguNewa" value="66" <?php if ($agua=="66") { echo "checked";}?>>
+						</label></div>
+						<div class="col-sm-4"><label class="check">
+							Luz<input type="checkbox" name="luzNew" value="67" <?php if ($luz=="67") { echo "checked";}?>>
+						</label></div>
+						<div class="col-sm-4"><label class="check">
+							Aseo<input type="checkbox" name="aseoNew" value="68" <?php if ($aseo=="68") { echo "checked";}?>>
+						</label></div>
+						<div class="col-sm-12"><label>Otros</label>	
+						<input type="text" name="otroServicioNew" placeholder="Otros servicios" value="<?php echo $otroServicio;?>"></div>	
+					</div>
 				</div>
+
 				<div class="submit">
 					<input class="btn_save" type="submit" value="ACTUALIZAR">
 				</div>
