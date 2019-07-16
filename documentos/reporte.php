@@ -1,6 +1,6 @@
 <?php 
 require_once("vendor/autoload.php");
-require '../conectar.php';
+require '../include/db/conectar.php';
 
 $query = mysqli_query($conexion,"SELECT COUNT(*) total FROM ninos");
 $data = mysqli_fetch_array($query);
@@ -82,7 +82,7 @@ $fecha="<br><h4 align='right'>Maturin, ".strftime('%d')." de ".$mes." de ".$año
 
 $titulo="<br><h2 align='center'>Reportes</h2><br>";
 
-$texto="<p align=justify>Numero de ninos inscritos: ".$data['total']."<br/><br/>
+$texto="<p align=justify>Numero de niños inscritos: ".$data['total']."<br/><br/>
 Constancia que se expide a peticion de la parte interesada a los ".strftime('%d')." dias del mes de ".$mes." del ".$año." </p><br><h4 align='center'>Atentamente.</h4><br>";	
 
 $Firma="<br><p align=center><b>____________________________<br>Profa. Yolimar Rangel<br>Directora (E)<br>C.I: 17.242.686<br> Teléfonos: 04262036560
